@@ -1,0 +1,12 @@
+#idea files
+.idea
+*.iml
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+out/
+

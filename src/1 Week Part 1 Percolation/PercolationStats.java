@@ -30,7 +30,7 @@ public class PercolationStats
 	
     // perform T independent computational experiments on an N-by-N grid
     public PercolationStats(int N, int T) {
-    	if ( (!isNumPositive(N) ) || ( (!isNumPositive(T) ) ) ) {
+    	if ((!isNumPositive(N)) || ((!isNumPositive(T)))) {
     		throw new java.lang.IllegalArgumentException("N and T must be greater than 0!");
     	}
     	gridSize = N;
@@ -50,7 +50,7 @@ public class PercolationStats
     private void runMonteCarloSimulation() {
     	for (int experimentIter = 0; experimentIter < experimentsNum; experimentIter++) {
 			int curBorderSite = oneExperiment();
-			fractionOpenedSites[experimentIter] = ( (double) curBorderSite / (gridSize * gridSize) );
+			fractionOpenedSites[experimentIter] = ((double) curBorderSite / (gridSize * gridSize));
 			fractionOpenedSitesSum += fractionOpenedSites[experimentIter];
 		}
     }
@@ -59,9 +59,9 @@ public class PercolationStats
     private int oneExperiment() {
     	Percolation percolation = new Percolation(gridSize);
 		int siteNum = 0;
-		while ( (!percolation.percolates() ) && (siteNum <= (gridSize * gridSize) )) {
-			int row = 1 + (int)(Math.random() * gridSize);
-			int col = 1 + (int)(Math.random() * gridSize);
+		while ((!percolation.percolates()) && (siteNum <= (gridSize * gridSize))) {
+			int row = 1 + (int) (Math.random() * gridSize);
+			int col = 1 + (int) (Math.random() * gridSize);
 			if (percolation.isOpen(row, col)) {
 				continue;
 			}
@@ -75,7 +75,7 @@ public class PercolationStats
     
     // sample mean of percolation threshold
     public double mean() {
-    	mean = (double) (fractionOpenedSitesSum / experimentsNum );
+    	mean = (double) (fractionOpenedSitesSum / experimentsNum);
         return mean;
     }
 
@@ -90,19 +90,21 @@ public class PercolationStats
 
     // returns lower bound of the 95% confidence interval
     public double confidenceLo() {
-        return ( mean - ( (1.96 * deviation) / ( Math.sqrt( (double) experimentsNum) ) ) );
+        return (mean - ((1.96 * deviation) / (Math.sqrt((double) experimentsNum))));
     }
 
     // returns upper bound of the 95% confidence interval
     public double confidenceHi() {
-        return ( mean + ( (1.96 * deviation) / ( Math.sqrt( (double) experimentsNum) ) ) );
+        return (mean + ((1.96 * deviation) / (Math.sqrt((double) experimentsNum))));
     }
     
     // @Test
     // method for testing class
     public static void main(String[] args) {
-        int N = Integer.parseInt(args[0]); // @Test from keyboard during execution int N = StdIn.readInt()
-        int T = Integer.parseInt(args[1]); // @Test from keyboard during execution  int T = StdIn.readInt()
+    	// @Test from keyboard during execution int N = StdIn.readInt()
+    	// @Test from keyboard during execution  int T = StdIn.readInt()
+        int N = Integer.parseInt(args[0]); 
+        int T = Integer.parseInt(args[1]); 
         PercolationStats percolationStats = new PercolationStats(N, T);
         StdOut.println("Mean                    = " + percolationStats.mean());
         StdOut.println("Stddev                  = " + percolationStats.stddev());

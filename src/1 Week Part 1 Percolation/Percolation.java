@@ -39,7 +39,7 @@ public class Percolation
 			 throw new java.lang.IllegalArgumentException("Size of the grid must be greater than 0");
 		 }
 	     gridSize = N;
-	     int numberOfSites = gridSize * gridSize + BOTTOM_AND_TOP_INDEX;
+	     int numberOfSites = (gridSize * gridSize) + BOTTOM_AND_TOP_INDEX;
 	     weightedQuickUnionUF = new WeightedQuickUnionUF(numberOfSites);
 	     topIndex = gridSize * gridSize;
 	     bottomIndex = gridSize * gridSize + 1;
@@ -78,8 +78,9 @@ public class Percolation
 		 for (int i = 0; i < SHIFT_TO_CONNECTED_SITES.length; i++) {
 			int connectedSiteRow = row + SHIFT_TO_CONNECTED_SITES[i][0];
 			int connectedSiteCol = col + SHIFT_TO_CONNECTED_SITES[i][1];
-			boolean isSiteConnectsToOpenSite = (!isIndexOutOfBorders(connectedSiteRow) ) && (!isIndexOutOfBorders(connectedSiteCol) )
-												&& (isSiteOpen[connectedSiteRow][connectedSiteCol] );
+			boolean isSiteConnectsToOpenSite = (!isIndexOutOfBorders(connectedSiteRow)) 
+												&& (!isIndexOutOfBorders(connectedSiteCol))
+												&& (isSiteOpen[connectedSiteRow][connectedSiteCol]);
 			if (isSiteConnectsToOpenSite) {
 					int currentSite1DIndex = twoDToOneD(row, col);
 					int connectedSite1DIndex = twoDToOneD(connectedSiteRow, connectedSiteCol);
@@ -89,7 +90,7 @@ public class Percolation
 	 }
 	 
 	 private boolean isIndexOutOfBorders(int index) {
-		return (index < 0) || (index > (gridSize - 1) ); 
+		return (index < 0) || (index > (gridSize - 1)); 
 	 }
 	 
 	 // returns index of id in weightedQuickUnionUF 
@@ -99,8 +100,8 @@ public class Percolation
 	 }
 	 
 	 // throws exception if coordinates not in borders
-	 private void checkCoordsOutOfBorders (int i, int j) {
-		 boolean isICoordsOutOfBorders = ( (i < 1) || (i > gridSize) || (j < 1) || (j > gridSize) );
+	 private void checkCoordsOutOfBorders(int i, int j) {
+		 boolean isICoordsOutOfBorders = ((i < 1) || (i > gridSize) || (j < 1) || (j > gridSize));
 		 if (isICoordsOutOfBorders) {
 			 throw new IndexOutOfBoundsException("You have inputted wrong coordinates");
 		 }
@@ -115,8 +116,14 @@ public class Percolation
 	 // is site (row i, column j) full?
 	 public boolean isFull(int i, int j) { 
 		 checkCoordsOutOfBorders(i, j);
+		 // first row is always connected to virtual top site because of the constructor.
+		 // last row may be full even if it is not opened because of the constuctor.
+		 // we should look if it was opened or not.
+		 if (((i == 1) || (i == gridSize)) && (!isOpen(i, j))) {
+			 return false;
+		 }
 		 return  weightedQuickUnionUF.connected(topIndex, 
-				 twoDToOneD(correctCoordToZeroArrayBeginning(i), correctCoordToZeroArrayBeginning(j) ) );
+				 twoDToOneD(correctCoordToZeroArrayBeginning(i), correctCoordToZeroArrayBeginning(j)));
 	 }
 	 
 	 // does the system percolate?

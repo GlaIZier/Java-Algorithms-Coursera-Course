@@ -7,8 +7,8 @@
  *  Specification: http://coursera.cs.princeton.edu/algs4/assignments/queues.html
  *  			   http://coursera.cs.princeton.edu/algs4/checklists/queues.html
  *  			   http://algs4.cs.princeton.edu/windows/
- *  !!!!!!!!!!!!!!!!!!!!!!!!!!Compilation:   javac-algs4 Percolation.java with uncommented main
- *  !!!!!!!!!!!!!!!!!!!!!!!!!!Execution:     java-algs4 Percolation
+ *  !!!!!!!!!!!!!!!!!!!!!!!!!!Compilation:   javac-algs4 Deque.java with uncommented main
+ *  !!!!!!!!!!!!!!!!!!!!!!!!!!Execution:     java-algs4 Deque
  *  Execution only with installed algs4.jar and stdlib.jar
  *  
  *  
@@ -135,16 +135,16 @@ public class Deque<Item> implements Iterable<Item> {
    
    // return an iterator over items in order from front to end
    public Iterator<Item> iterator() {
-	   return new ListIterator<Item>(first);
+	   return new DequeIterator<Item>(first);
    }
    
    // nested class
    // iterator must implements hasNext, next and remove
-   private class ListIterator<Item> implements Iterator<Item> {
+   private class DequeIterator<Item> implements Iterator<Item> {
        
 	   private Node<Item> current;
 
-       public ListIterator(Node<Item> first) {
+       public DequeIterator(Node<Item> first) {
            current = first;
        }
        
@@ -161,7 +161,7 @@ public class Deque<Item> implements Iterable<Item> {
         	   throw new java.util.NoSuchElementException("There is nothing to iterate now!");
            }
            Item item = current.item;
-           current = current.next; 
+           current = current.next; // go to the next node
            return item;
        }
    }
@@ -171,9 +171,12 @@ public class Deque<Item> implements Iterable<Item> {
     */
    public static void main(String[] args) {
        Deque<String> deque = new Deque<String>();
-       while (!StdIn.isEmpty()) {
+       while (true) {
            String item = StdIn.readString();
-           if (item.equals("-")) {
+           if (item.equals("q")) {
+        	   break;
+           }
+           else if (item.equals("-")) {
         	   StdOut.print(deque.removeLast());
            }
            else if (item.equals("=")) {
@@ -186,6 +189,20 @@ public class Deque<Item> implements Iterable<Item> {
         	   deque.addFirst(item);
            }
        }
-       StdOut.println("Deque size is " + deque.size() + " of nodes");
+       
+       // first way to iterate
+       Iterator<String> iterator = deque.iterator();
+       while (iterator.hasNext()) {
+    	   System.out.print(iterator.next() + " ");
+       }
+       System.out.println();
+       
+       // second way to iterate
+       for (String i: deque) {
+    	   System.out.print(i + " ");
+       }
+       System.out.println();
+       
+       System.out.println("Size of deque = " + deque.size());
    }
 }

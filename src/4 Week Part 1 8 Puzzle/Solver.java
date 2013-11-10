@@ -41,7 +41,7 @@ public class Solver {
 			else {
 				moves = prevSearchNode.moves + 1;
 			}
-			this.priority = this.manhattan + this.priority;
+			this.priority = this.manhattan + this.moves;
 			// property of A* algorithm
 			assert ( (prevSearchNode == null) || (this.priority >= prevSearchNode.priority) ); 
 		}
@@ -86,24 +86,31 @@ public class Solver {
 			normalPQ.insert(new SearchNode(initial, null));
 			twinPQ.insert(new SearchNode(initial.twin(), null));
 			while (true) {
-				solutionTwinNode = twinPQ.delMin();
+				// work with twin board case
+				solutionTwinNode = makeStep(twinPQ);
 				if (solutionTwinNode.board.isGoal()) {
 					clearMemory(solutionNode);
 					clearMemory(solutionTwinNode);
+					// if there is solution in twin than there is no solution in initial board
 					solutionNode = null;
 					return;
 				}
-				addNeighbors(solutionTwinNode, twinPQ);
-				solutionNode = normalPQ.delMin();
+				// work with normal board
+				solutionNode = makeStep(normalPQ);
 				if (solutionNode.board.isGoal()) {
 					clearMemory(solutionTwinNode);
 					return;
 				}	
-				addNeighbors(solutionNode, normalPQ);
 			}
 		}
 		
  	}
+	
+	private SearchNode makeStep(MinPQ<SearchNode> minPQ) {
+		SearchNode currentBestNode = minPQ.delMin();
+		addNeighbors(currentBestNode, minPQ);
+		return currentBestNode;
+	}
 	
 	private void clearMemory(SearchNode first) {
 		if (first == null) {
@@ -172,10 +179,18 @@ public class Solver {
 	        }
 	    }
 		// @Test 
+		// unsolvable
 //		int[][] blocks = {
-//				{0, 1, 3},
-//				{4, 2, 5},
-//				{7, 8, 6}
+//				{8, 6, 7},
+//				{2, 5, 4},
+//				{1, 3, 0}
+//		};
+		// @Test
+		// 11 steps	
+//		int[][] blocks = {
+//				{1, 0, 2},
+//				{7, 5, 4},
+//				{8, 6, 3}
 //		};
 	    
 	    Board initial = new Board(blocks);
@@ -191,8 +206,5 @@ public class Solver {
 	            StdOut.println(board);
 	    }
 	}
-//                 
-//                          
-//           
-//      
+       
 }
